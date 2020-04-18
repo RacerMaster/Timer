@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta content="IE=edge"
+        http-equiv="X-UA-Compatible">
+  <title>Alarm</title>
+  <meta content="width=device-width, initial-scale=1"
+        name="viewport">
+  <link crossorigin="anonymous"
+        href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+        rel="stylesheet">
+  <link crossorigin="anonymous"
+        href="https://use.fontawesome.com/releases/v5.7.2/css/all.css"
+        integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr"
+        rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Lato"
+        rel="stylesheet">
+  <link href="timer.css"
+        media="screen"
+        rel="stylesheet"
+        type="text/css">
+  <script crossorigin="anonymous"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+  <script crossorigin="anonymous"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+  <script crossorigin="anonymous"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+  <script src="timer.js"></script>
+</head>
+<body>
+  <div class="content">
+    <div class="volume">
+      Volume: <span id="volume">10</span>
+    </div>
+    <div class="far fa-question-circle"
+         data-target="#helpModal"
+         data-toggle="modal"
+         id="helpbutton"></div>
+    <h1 class="title">Alarm</h1><audio id="ring"
+         src="telephone-ring-03a.mp3"></audio>
+    <div class="box">
+      <form action="#"
+            id="inputform"
+            name="inputform">
+        <input autocomplete="off"
+              autofocus=""
+              class="input"
+              id="inputbox"
+              type="text">
+      </form>
+    </div>
+    <div id="alarms">
+      <div class="alarm"
+           id="template"
+           ringcount="3"
+           time="">
+        <div class="comment"></div>
+        <div class="display"></div>
+        <div class="fas fa-times delete"></div>
+      </div>
+    </div>
+    <div class="modal"
+         id="helpModal"
+         role="dialog"
+         tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered"
+           role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Usage</h5><button aria-label="Close"
+                 class="close"
+                 data-dismiss="modal"
+                 type="button">
+            <div aria-hidden="true"
+                 class="fas fa-times delete"></div></button>
+          </div>
+          <div class="modal-body">
+            <h5>Countdown:</h5>hours: hrs/hr/h/std<br>
+            Minutes: min/m/mins<br>
+            Seconds: s/sec/sek<br>
+            Example: 6m9s<br>
+            <br>
+            <h5>Alarm:</h5>[h]h:mm[:ss]<br>
+            Example: 13:37<br>
+            <br>
+            <h5>Comment:</h5>#<br>
+            Example: 4h20m#blaze it<br>
+            <br>
+            <h5>Volume:</h5>volume/vol[:] 0-100<br>
+            Example: vol 20
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
