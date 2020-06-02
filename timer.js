@@ -242,8 +242,8 @@ function showHelp() {
 }
 
 $(document).ready(function() {
-    $("#inputform")[0].addEventListener("submit", createTimer);
-    $("#helpbutton")[0].addEventListener("click", showHelp);
+    $("#inputform").on("submit", createTimer);
+    $("#helpbutton").on("click", showHelp);
 
     let vol = getVolume();
     if (!vol){
