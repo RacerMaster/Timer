@@ -3,9 +3,9 @@ function createTimer() {
 	let alarmtime = new Date();
 	let validinput = false;
 
-	let hrctd = /\d+\s*(hrs|hr|h|std)/i;
-	let minctd = /\d+\s*(min|m|mins)/i;
-	let secctd = /\d+\s*(s|sec|sek)/i;
+	let hrcdt = /\d+\s*(hrs|hr|h|std)/i;
+	let mincdt = /\d+\s*(min|m|mins)/i;
+	let seccdt = /\d+\s*(s|sec|sek)/i;
 
 	let alarm = /(\d)?\d:\d\d(:\d\d)?/i;
 
@@ -13,9 +13,9 @@ function createTimer() {
 
 	let comment = /\#.*/i;
 
-	let h = input.match(hrctd);
-	let m = input.match(minctd);
-	let s = input.match(secctd);
+	let h = input.match(hrcdt);
+	let m = input.match(mincdt);
+	let s = input.match(seccdt);
 
 	let t = input.match(alarm);
 
