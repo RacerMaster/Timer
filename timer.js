@@ -82,7 +82,7 @@ function createTimer(){
 	$("#inputbox")[0].value = "";
 	if (validinput){
 		console.log(alarmtime);
-		createTimerDOM(alarmtime, c);
+		addTimer(alarmtime, c);
 		updateCountdowns();
 	}
 }
@@ -98,14 +98,14 @@ function addTime(date, addms){
 	date.setTime(curr+addms);
 }
 
-function createTimerDOM(time, comment){
+function createTimerDOM(time, comment, id){
 	let parent = $("#alarms")[0];
 	let tmpl = $("#template")[0];
 
 	let newAlarm = tmpl.cloneNode();
 	newAlarm.innerHTML = tmpl.innerHTML;
 	
-	newAlarm.setAttribute("id","");
+	newAlarm.setAttribute("id",id);
 	newAlarm.setAttribute("time",time.getTime());
 
 	let timeString = time.toLocaleTimeString();
@@ -210,42 +210,89 @@ function soundAlarm(){
 	return false;
 }
 
+function addTimer(time, comment) {
+	let alarms = getAlarms();
+	let alarm = {};
+	alarm.time = time;
+	alarm.comment = comment;
+
+	alarms.max++;
+	let id = "a" + alarms.max;
+
+	alarms[id] = alarm;
+	createTimerDOM(time, comment, id);
+
+	setAlarms(alarms);
+}
+
 function deleteTimer(e){
+	let id = e.target.parentNode.id;
+	console.log("removing timer: " + id);
 	e.target.parentNode.remove();
+	let alarms = getAlarms();
+	delete alarms[id];
+
+	setAlarms(alarms);
+}
+
+function restoreTimers() {
+	let alarms = getAlarms();
+	for(a in alarms) {
+		if (a != "max"){
+			createTimerDOM(new Date(alarms[a].time), alarms[a].comment, a);
+		}
+	}
 }
 
 function setVolume(vol) {
 	$("#ring")[0].volume = vol;
-	let cookie = {};
-	try {
-		cookie = JSON.parse(document.cookie);
-	} catch (error) {}
+
+	let cookie = getCookieData();
 	cookie.volume = vol;
-	let expDate = new Date();
-	expDate.setFullYear(expDate.getFullYear() + 100);
-	document.cookie = JSON.stringify(cookie) + ";expires=" + expDate.toUTCString();
+	setCookieData(cookie);
 
 	$("#volume")[0].innerHTML = vol * 100;
 	console.log("volume: " + vol);
 }
 
 function getVolume() {
+	let cookie = getCookieData();
+	return cookie.volume || 0.1;
+}
+
+function setAlarms(alarms) {
+	let cookie = getCookieData();
+	cookie.alarms = alarms;
+	setCookieData(cookie);
+}
+
+function getAlarms() {
+	let cookie = getCookieData();
+	return cookie.alarms || {max:0};
+}
+
+function getCookieData() {
 	let cookie = {};
 	try {
 		cookie = JSON.parse(document.cookie);
 	} catch (error) {}
-	return cookie.volume;
+	return cookie;
+}
+
+function setCookieData(data) {
+	let expDate = new Date();
+	expDate.setFullYear(expDate.getFullYear() + 100);
+	document.cookie = JSON.stringify(data) + ";expires=" + expDate.toUTCString() + ";SameSite=Strict";
 }
 
 $(document).ready(function() {
 	$("#inputform").on("submit", createTimer);
 
 	let vol = getVolume();
-	if (!vol){
-		setVolume(0.1);
-	} else {
-		setVolume(vol);
-	}
+	setVolume(vol);
+
+	restoreTimers();
+	updateCountdowns();
 
 	window.setInterval(updateCountdowns, 1000);
 });
