@@ -3,19 +3,23 @@ function createTimer() {
 	let alarmtime = new Date();
 	let validinput = false;
 
-	let hrcdt = /\d+\s*(hrs|hr|h|std)/i;
-	let mincdt = /\d+\s*(min|m|mins)/i;
-	let seccdt = /\d+\s*(s|sec|sek)/i;
+	let hrcdt = /\d+\s*(?:hrs|hr|h|std)/i;
+	let mincdt = /\d+\s*(?:min|m|mins)/i;
+	let seccdt = /\d+\s*(?:s|sec|sek)/i;
 
-	let alarm = /(\d)?\d:\d\d(:\d\d)?/i;
+	let date =  /@\s*(\d\d?)(?:\.(\d\d?)(?:\.(\d\d\d\d+))?)?/i;
 
-	let volume = /(volume|vol)(:)?\s*(\d)?(\d)?\d/i;
+	let alarm = /\d?\d:\d\d(?::\d\d)?/i;
+
+	let volume = /(?:volume|vol):?\s*\d+/i;
 
 	let comment = /\#.*/i;
 
 	let h = input.match(hrcdt);
 	let m = input.match(mincdt);
 	let s = input.match(seccdt);
+
+	let d = input.match(date);
 
 	let t = input.match(alarm);
 
@@ -52,6 +56,26 @@ function createTimer() {
 		}
 	} else if (t) {
 		validinput = true;
+
+		if (d) {
+			console.log(d);
+
+			let day = d[1];
+			let mon = d[2];
+			let year = d[3];
+
+			if (day) {
+				alarmtime.setDate(day);
+			}
+
+			if (mon) {
+				alarmtime.setMonth(mon - 1);
+			}
+
+			if (year) {
+				alarmtime.setFullYear(year);
+			}
+		}
 
 		t = t[0].split(":");
 		if (t[0] >= 0 && t[0] <= 24) {
@@ -108,7 +132,14 @@ function createTimerDOM(time, comment, id) {
 	newAlarm.setAttribute("id", id);
 	newAlarm.setAttribute("time", time.getTime());
 
-	let timeString = time.toLocaleTimeString();
+	let timeString = "";
+
+	if (time.toLocaleDateString() != (new Date()).toLocaleDateString()){
+		timeString = time.toLocaleDateString()+ " " +time.toLocaleTimeString();
+	} else {
+		timeString = time.toLocaleTimeString();
+	}
+
 	if (comment) {
 		comment = comment[0].slice(1);
 		comment = timeString + " : " + comment;
