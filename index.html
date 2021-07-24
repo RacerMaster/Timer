@@ -7,60 +7,48 @@
   <title>Alarm</title>
   <meta content="width=device-width, initial-scale=1"
         name="viewport">
-  <link crossorigin="anonymous"
-        href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
-        rel="stylesheet">
-  <link crossorigin="anonymous"
-        href="https://use.fontawesome.com/releases/v5.7.2/css/all.css"
-        integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr"
-        rel="stylesheet">
   <link href="https://fonts.googleapis.com/css?family=Lato"
         rel="stylesheet">
   <link href="timer.css"
         media="screen"
         rel="stylesheet"
         type="text/css">
-  <script crossorigin="anonymous"
-        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-        src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
-  <script crossorigin="anonymous"
-        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
-        src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-  <script crossorigin="anonymous"
-        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
-        src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-  <script src="timer.js"></script>
+  <script defer
+        src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+  <script defer
+        src="timer.js"></script>
 </head>
 <body>
-  <div class="content">
+  <div class="content"
+       id="app">
     <div class="volume">
-      Volume: <span id="volume">10</span>
+      Volume: {{ data.vol }}
     </div>
     <div class="far fa-question-circle"
          data-target="#helpModal"
          data-toggle="modal"
          id="helpbutton"></div>
     <h1 class="title">Alarm</h1><audio id="ring"
+         ref="ring"
          src="ring.mp3"></audio>
     <div class="box">
-      <form action="#"
-            id="inputform"
-            name="inputform">
+      <form v-on:submit.prevent="createTimer">
         <input autocomplete="off"
               autofocus=""
               class="input"
-              id="inputbox"
-              type="text">
+              type="text"
+              v-model="input">
       </form>
     </div>
     <div id="alarms">
       <div class="alarm"
-           id="template"
-           ringcount="3"
-           time="">
-        <div class="comment"></div>
-        <div class="display"></div>
+           v-for="alarm in data.alarms">
+        <div class="comment">
+          {{ alarm.comment }}
+        </div>
+        <div class="display">
+          {{ getTimerString(alarm.time) }}
+        </div>
         <div class="fas fa-times delete"></div>
       </div>
     </div>

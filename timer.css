@@ -39,7 +39,7 @@ body {
 	font-size: 45pt;
 }
 
-#alarms div:nth-child(2) {
+#alarms div:nth-child(1) {
 	border-top-width: 0px;
 }
 
