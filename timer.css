@@ -1,23 +1,33 @@
-body {
-	background: DarkSlateGrey;
-	color: lightgray;
+.v-application {
 	font-family: 'Lato', sans-serif;
 }
 
-.content {
+.c_content {
 	width: 95%;
 	margin: auto;
 	max-width: 900px;
 }
 
-.title {
+.c_title {
 	text-align: center;
 	font-size: 60pt;
 	margin-top: 30px;
 }
 
-.box {
+.c_right {
+	text-align: right;
+}
+
+.c_help {
+	width: 600px;
+}
+
+.c_box {
 	font-size: 25pt;
+}
+
+input {
+	text-align: center;
 }
 
 .input {
@@ -29,17 +39,28 @@ body {
 	border-radius: 4px;
 }
 
-#template {
-	display: none;
-}
-
-.alarm {
-	border-top: solid lightgray 4px;
+.c_alarmtext {
+	width: 100%;
 	text-align: center;
+	line-height: normal;
 	font-size: 45pt;
 }
 
-#alarms div:nth-child(1) {
+.c_alarm {
+	width: 100%;
+	margin-left: 16px;
+	margin-right: 16px;
+}
+
+.c_divider {
+	border-top: solid 2px;
+}
+
+.c_first {
+	margin-top: -10px;
+}
+
+#alarms div:nth-child(2) {
 	border-top-width: 0px;
 }
 
@@ -47,18 +68,25 @@ body {
 	display: inline;
 }
 
-.delete {
-	color: darkred;
-	display: inline;
-	font-size: 30px;
+.c_delete {
+	display: inline !important;
+	margin-left: -10px;
+	margin-bottom: -5px;
+}
+
+.v-icon:focus::after {
+	opacity: 0 !important;
+}
+
+.v-icon {
+	color: inherit !important;
 }
 
 .delete:hover {
 	cursor: pointer;
 }
 
-.comment {
-	font-size: 15pt;
+.c_comment {
 	position: absolute;
 }
 
