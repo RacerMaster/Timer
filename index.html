@@ -56,7 +56,7 @@
               {{ getAlarmString(alarm.time) }} <span v-if="alarm.comment">:</span> {{ alarm.comment }}
             </v-col>
             <v-col class="c_alarmtext">
-              {{ getTimerString(alarm.time) }}
+              {{ getTimerString(alarm, i) }}
               <v-icon class="c_delete" color="red" large @click="removeTimer(i)">mdi-close</v-icon>
             </v-col>
           </div>

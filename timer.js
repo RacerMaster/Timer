@@ -1,7 +1,8 @@
 const App = {
 	template: '#app-template',
 	data: () => ({
-		updateTitle: true,
+		title: "Alarm",
+		titleDate: null,
 		input: "",
 		help: false,
 		data: {
@@ -12,8 +13,18 @@ const App = {
 	computed: {
 	},
 	methods: {
-		getTimerString: function(time) {
-			let ctdMs = new Date(time) - new Date();
+		getTimerString: function(alarm, i) {
+			let alarmDate = new Date(alarm.time);
+			let ctdMs = alarmDate - new Date();
+
+			if (ctdMs <= 0){
+				ctdMs = 0;
+				if (alarm.rings > 0){
+					if (this.soundAlarm()){
+						alarm.rings--;
+					}
+				}
+			}
 			
 			let h = Math.floor(ctdMs / 3600000);
 			ctdMs = ctdMs % 3600000;
@@ -43,9 +54,9 @@ const App = {
 			}
 			timeStr += s;
 			
-			if (this.updateTitle && timeStr != "0") {
-				document.title = timeStr;
-				this.updateTitle = false;
+			if (timeStr != "0" && (this.titleDate == null || this.titleDate - new Date() > 0)) {
+				this.titleDate = alarmDate;
+				this.title = timeStr;
 			}
 			
 			return timeStr;
@@ -174,11 +185,18 @@ const App = {
 			}
 		},
 		addTimer: function(time, comment){
-			let alarm = {time: time, comment: comment};
+			let alarm = {time: time, comment: comment, rings: 3};
 			this.data.alarms.push(alarm);
+
+			this.data.alarms.sort((a, b) => {
+				let adate = new Date(a.time);
+				let bdate = new Date(b.time);
+				return adate - bdate;
+			});
 		},
 		soundAlarm: function(){
 			let audio = this.$refs.ring;
+			audio.volume = this.data.vol / 100;
 			if (audio.paused) {
 				audio.play();
 				return true;
@@ -190,9 +208,12 @@ const App = {
 		},
 		update: function(){
 			if (this.data.alarms.length > 0){
+				this.titleDate = null;
+				this.title = "Alarm";
 				this.$forceUpdate();
+				document.title = this.title;
 			}
-		},
+		}
 	},
 	mounted: function () {
 		window.setInterval(this.update , 100);
@@ -211,6 +232,7 @@ function addTime(date, addms) {
 	date.setTime(curr + addms);
 }
 
+/*
 function createTimerDOM(time, comment, id) {
 	let parent = $("#alarms")[0];
 	let tmpl = $("#template")[0];
@@ -428,6 +450,7 @@ function save(d){
 	expDate.setFullYear(expDate.getFullYear() + 100);
 	document.cookie = JSON.stringify(d) + ";expires=" + expDate.toUTCString() + ";SameSite=Strict";
 }
+*/
 
 // $(document).ready(function () {
 // 	$("#inputform").on("submit", createTimer);
