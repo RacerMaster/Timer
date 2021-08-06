@@ -1,3 +1,11 @@
+input {
+	text-align: center;
+}
+
+html {
+	overflow: hidden;
+}
+
 .v-application {
 	font-family: 'Lato', sans-serif;
 }
@@ -11,7 +19,7 @@
 .c_title {
 	text-align: center;
 	font-size: 60pt;
-	margin-top: 30px;
+	margin-top: -10px;
 }
 
 .c_right {
@@ -26,19 +34,6 @@
 	font-size: 25pt;
 }
 
-input {
-	text-align: center;
-}
-
-.input {
-	background: DarkSlateGrey;
-	width: 100%;
-	text-align: center;
-	color: lightgray;
-	border: solid lightgray 4px;
-	border-radius: 4px;
-}
-
 .c_alarmtext {
 	width: 100%;
 	text-align: center;
@@ -48,8 +43,8 @@ input {
 
 .c_alarm {
 	width: 100%;
-	margin-left: 16px;
-	margin-right: 16px;
+	margin-left: 12px;
+	margin-right: 12px;
 }
 
 .c_divider {
@@ -58,14 +53,6 @@ input {
 
 .c_first {
 	margin-top: -10px;
-}
-
-#alarms div:nth-child(2) {
-	border-top-width: 0px;
-}
-
-.display {
-	display: inline;
 }
 
 .c_delete {
@@ -82,51 +69,6 @@ input {
 	color: inherit !important;
 }
 
-.delete:hover {
-	cursor: pointer;
-}
-
 .c_comment {
 	position: absolute;
-}
-
-.volume {
-	font-size: 15pt;
-	line-height: 1;
-	position: absolute;
-}
-
-#helpbutton {
-	font-size: 20pt;
-	float: right;
-	height: 0;
-}
-
-#helpbutton:hover {
-	cursor: pointer;
-}
-
-.modal-content {
-	background: darkslategray;
-	border-color: lightgray;
-	border-width: 4px; 
-}
-
-.modal-header {
-	border-width: 4px; 
-}
-
-.close {
-	color: white;
-	text-shadow: none;
-	opacity: 1;
-}
-
-.close:hover {
-	color: lightgray;
-}
-
-.modal-title {
-	line-height: 1;
-	font-size: 23pt;
 }

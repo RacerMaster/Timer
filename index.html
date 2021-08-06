@@ -46,17 +46,17 @@
         <v-row>
           <v-col>
             <form v-on:submit.prevent="createTimer">
-              <v-text-field class="c_box" v-model="input" hide-details="true"></v-text-field>
+              <v-text-field class="c_box" v-model="input" hide-details="true" color="hsla(0,0%,100%,.7)" :loading="true" autofocus></v-text-field>
             </form>
           </v-col>
         </v-row>
-        <v-row  v-for="(alarm, i) in data.alarms">
+        <v-row  v-for="(alarm, i) in data.alarms" :key="alarm.time">
           <div class="c_alarm" v-bind:class="{ c_divider: i!=0, c_first: i==0 }">
             <v-col class="c_comment">
               {{ getAlarmString(alarm.time) }} <span v-if="alarm.comment">:</span> {{ alarm.comment }}
             </v-col>
             <v-col class="c_alarmtext">
-              {{ getTimerString(alarm, i) }}
+              {{ getTimerString(alarm) }}
               <v-icon class="c_delete" color="red" large @click="removeTimer(i)">mdi-close</v-icon>
             </v-col>
           </div>

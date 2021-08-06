@@ -1,8 +1,7 @@
 const App = {
 	template: '#app-template',
 	data: () => ({
-		title: "Alarm",
-		titleDate: null,
+		staticTitle: "Alarm",
 		input: "",
 		help: false,
 		data: {
@@ -11,9 +10,23 @@ const App = {
 		}
 	}),
 	computed: {
+		title: function(){
+			this.staticTitle; // use staticTitle so update causes recompute
+			for (let alarm of this.data.alarms){
+				let timerString = this.getTimerString(alarm);
+
+				if (timerString != "0") {
+					if (alarm.comment != ""){
+						return timerString + " : " + alarm.comment;
+					}
+					return timerString;
+				}
+			}
+			return this.staticTitle;
+		},
 	},
 	methods: {
-		getTimerString: function(alarm, i) {
+		getTimerString: function(alarm) {
 			let alarmDate = new Date(alarm.time);
 			let ctdMs = alarmDate - new Date();
 
@@ -53,11 +66,6 @@ const App = {
 				timeStr += "0";
 			}
 			timeStr += s;
-			
-			if (timeStr != "0" && (this.titleDate == null || this.titleDate - new Date() > 0)) {
-				this.titleDate = alarmDate;
-				this.title = timeStr;
-			}
 			
 			return timeStr;
 		},
@@ -112,6 +120,7 @@ const App = {
 					v = 100;
 				}
 				this.data.vol = v;
+				this.save();
 			} else if (h || m || s) {
 				validinput = true;
 				if (h) {
@@ -193,6 +202,11 @@ const App = {
 				let bdate = new Date(b.time);
 				return adate - bdate;
 			});
+			this.save();
+		},
+		removeTimer:  function(index){
+			this.data.alarms.splice(index, 1);
+			this.save();
 		},
 		soundAlarm: function(){
 			let audio = this.$refs.ring;
@@ -203,19 +217,40 @@ const App = {
 			}
 			return false;
 		},
-		removeTimer:  function(index){
-			this.data.alarms.splice(index, 1);
-		},
 		update: function(){
 			if (this.data.alarms.length > 0){
-				this.titleDate = null;
-				this.title = "Alarm";
-				this.$forceUpdate();
+				this.staticTitle = "not Alarm"; // update staticTitle so title gets recomputed
+				this.staticTitle = "Alarm";
+				if (document.visibilityState == "visible"){
+					this.$forceUpdate();
+				}
 				document.title = this.title;
 			}
+		},
+		load: function (){
+			console.log("reading cookie");
+			let cookie = {};
+			try {
+				cookie = JSON.parse(document.cookie);
+			} catch (error) {}
+			
+			if (cookie.vol == undefined){
+				cookie.vol = 10;
+			}
+			if (cookie.alarms == undefined){
+				cookie.alarms = [];
+			}
+			this.data = cookie;
+		},
+		save: function (){
+			console.log("writing cookie");
+			let expDate = new Date();
+			expDate.setFullYear(expDate.getFullYear() + 100);
+			document.cookie = JSON.stringify(this.data) + ";expires=" + expDate.toUTCString() + ";SameSite=Strict";
 		}
 	},
 	mounted: function () {
+		this.load();
 		window.setInterval(this.update , 100);
 	},
 };
@@ -231,235 +266,3 @@ function addTime(date, addms) {
 	let curr = date.getTime();
 	date.setTime(curr + addms);
 }
-
-/*
-function createTimerDOM(time, comment, id) {
-	let parent = $("#alarms")[0];
-	let tmpl = $("#template")[0];
-	
-	let newAlarm = tmpl.cloneNode();
-	newAlarm.innerHTML = tmpl.innerHTML;
-	
-	newAlarm.setAttribute("id", id);
-	newAlarm.setAttribute("time", time.getTime());
-	
-	let timeString = "";
-	
-	if (time.toLocaleDateString() != (new Date()).toLocaleDateString()){
-		timeString = time.toLocaleDateString()+ " " +time.toLocaleTimeString();
-	} else {
-		timeString = time.toLocaleTimeString();
-	}
-	
-	if (comment) {
-		comment = comment[0].slice(1);
-		comment = timeString + " : " + comment;
-	} else {
-		comment = timeString;
-	}
-	newAlarm.firstElementChild.innerHTML = comment;
-	
-	newAlarm.children[2].addEventListener("click", deleteTimer);
-	
-	let alarms = $("#alarms")[0].children;
-	for (let i = 0; i < alarms.length; i++) {
-		let otherTime = alarms[i].getAttribute("time");
-		otherTime = parseInt(otherTime);
-		if (time < otherTime) {
-			parent.insertBefore(newAlarm, alarms[i]);
-			return;
-		}
-	}
-	
-	parent.appendChild(newAlarm);
-}
-
-function updateCountdowns() {
-	let alarms = $("#alarms")[0].children;
-	//giveFocusToBox();
-	let updateTitle = true;
-	
-	for (let i = 1; i < alarms.length; i++) {
-		let time = alarms[i].getAttribute("time");
-		time = parseInt(time);
-		let ctdMs = new Date(time) - new Date();
-		
-		if (ctdMs < 0) {
-			let rings = alarms[i].getAttribute("ringcount");
-			rings = parseInt(rings);
-			
-			if (rings > 0) {
-				let played = soundAlarm();
-				
-				if (played) {
-					alarms[i].setAttribute("ringcount", rings - 1);
-					console.log("ring ring ring");
-				}
-			}
-			ctdMs = 0;
-		}
-		
-		let h = Math.floor(ctdMs / 3600000);
-		ctdMs = ctdMs % 3600000;
-		
-		let m = Math.floor(ctdMs / 60000);
-		ctdMs = ctdMs % 60000;
-		
-		let s = Math.floor(ctdMs / 1000);
-		
-		let timeStr = "";
-		let cut = true;
-		if (h != 0) {
-			timeStr += h;
-			timeStr += ":";
-			cut = false;
-		}
-		if (m != 0 || !cut) {
-			if (!cut && m < 10) {
-				timeStr += "0";
-			}
-			timeStr += m;
-			timeStr += ":";
-			cut = false;
-		}
-		if (!cut && s < 10) {
-			timeStr += "0";
-		}
-		timeStr += s;
-		
-		if (updateTitle && timeStr != "0") {
-			document.title = timeStr;
-			updateTitle = false;
-		}
-		alarms[i].children[1].innerHTML = timeStr;
-	}
-	
-	if (updateTitle) {
-		document.title = "Alarm";
-	}
-}
-
-function giveFocusToBox() {
-	$("#inputbox")[0].focus();
-}
-
-function soundAlarm() {
-	let audio = $("#ring")[0];
-	if (audio.paused) {
-		audio.play();
-		return true;
-	}
-	return false;
-}
-
-function addTimer(time, comment) {
-	let alarms = getAlarms();
-	let alarm = {};
-	alarm.time = time;
-	alarm.comment = comment;
-	
-	alarms.max++;
-	let id = "a" + alarms.max;
-	
-	alarms[id] = alarm;
-	createTimerDOM(time, comment, id);
-	
-	setAlarms(alarms);
-}
-
-function deleteTimer(e) {
-	let id = e.target.parentNode.id;
-	console.log("removing timer: " + id);
-	e.target.parentNode.remove();
-	let alarms = getAlarms();
-	delete alarms[id];
-	
-	setAlarms(alarms);
-}
-
-function restoreTimers() {
-	let alarms = getAlarms();
-	for (a in alarms) {
-		if (a != "max") {
-			createTimerDOM(new Date(alarms[a].time), alarms[a].comment, a);
-		}
-	}
-}
-
-function setVolume(vol) {
-	$("#ring")[0].volume = vol;
-	
-	let cookie = getCookieData();
-	cookie.volume = vol;
-	setCookieData(cookie);
-	
-	$("#volume")[0].innerHTML = vol * 100;
-	console.log("volume: " + vol);
-}
-
-function getVolume() {
-	let cookie = getCookieData();
-	return cookie.volume || 0.1;
-}
-
-function setAlarms(alarms) {
-	let cookie = getCookieData();
-	cookie.alarms = alarms;
-	setCookieData(cookie);
-}
-
-function getAlarms() {
-	let cookie = getCookieData();
-	return cookie.alarms || {
-		max: 0
-	};
-}
-
-function getCookieData() {
-	let cookie = {};
-	try {
-		cookie = JSON.parse(document.cookie);
-	} catch (error) {}
-	return cookie;
-}
-
-function setCookieData(data) {
-	let expDate = new Date();
-	expDate.setFullYear(expDate.getFullYear() + 100);
-	document.cookie = JSON.stringify(data) + ";expires=" + expDate.toUTCString() + ";SameSite=Strict";
-}
-
-function load(){
-	let cookie = {};
-	try {
-		cookie = JSON.parse(document.cookie);
-	} catch (error) {}
-	
-	if (cookie.vol == undefined){
-		cookie.vol = 10;
-	}
-	if (cookie.alarms == undefined){
-		cookie.alarms = [];
-	}
-	return cookie;
-}
-
-function save(d){
-	console.log("writing cookie");
-	let expDate = new Date();
-	expDate.setFullYear(expDate.getFullYear() + 100);
-	document.cookie = JSON.stringify(d) + ";expires=" + expDate.toUTCString() + ";SameSite=Strict";
-}
-*/
-
-// $(document).ready(function () {
-// 	$("#inputform").on("submit", createTimer);
-
-// 	let vol = getVolume();
-// 	setVolume(vol);
-
-// 	restoreTimers();
-// 	updateCountdowns();
-
-// 	window.setInterval(updateCountdowns, 1000);
-// });
