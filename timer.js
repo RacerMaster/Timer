@@ -227,6 +227,8 @@ const App = {
 					this.$forceUpdate();
 				}
 				document.title = this.title;
+			} else {
+				document.title = this.staticTitle;
 			}
 		},
 		load: function (){
