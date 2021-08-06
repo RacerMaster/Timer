@@ -112,6 +112,8 @@ const App = {
 			
 			if (input == "ring") {
 				this.soundAlarm();
+			} else if (input == "reset cookie") {
+				this.resetCookie();
 			} else if (v) {
 				v = v[1];
 				if (v < 0) {
@@ -247,7 +249,14 @@ const App = {
 			let expDate = new Date();
 			expDate.setFullYear(expDate.getFullYear() + 100);
 			document.cookie = JSON.stringify(this.data) + ";expires=" + expDate.toUTCString() + ";SameSite=Strict";
-		}
+		},
+		resetCookie: function (){
+			this.data = {
+				vol: 10,
+				alarms: []
+			};
+			this.save();
+		},
 	},
 	mounted: function () {
 		this.load();
