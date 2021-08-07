@@ -7,6 +7,12 @@
   <title>Alarm</title>
   <meta content="width=device-width, initial-scale=1"
         name="viewport">
+  <link href="/favicon/favicon.svg"
+        rel="icon"
+        type="image/svg+xml">
+  <link href="/favicon/favicon.png"
+        rel="icon"
+        type="image/png">
   <link href="https://fonts.googleapis.com/css?family=Lato"
         rel="stylesheet">
   <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900"
@@ -46,7 +52,7 @@
         <v-row>
           <v-col>
             <form v-on:submit.prevent="createTimer">
-              <v-text-field class="c_box" v-model="input" hide-details="true" color="hsla(0,0%,100%,.7)" :loading="true" autofocus></v-text-field>
+              <v-text-field class="c_box" v-model="input" hide-details="true" loading="secondary" autofocus></v-text-field>
             </form>
           </v-col>
         </v-row>
@@ -57,7 +63,7 @@
             </v-col>
             <v-col class="c_alarmtext">
               {{ getTimerString(alarm) }}
-              <v-icon class="c_delete" color="red" large @click="removeTimer(i)">mdi-close</v-icon>
+              <v-icon class="c_delete" color="red accent-4" large @click="removeTimer(i)">mdi-close</v-icon>
             </v-col>
           </div>
         </v-row>

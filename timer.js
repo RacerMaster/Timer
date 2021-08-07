@@ -262,16 +262,23 @@ const App = {
 	},
 	mounted: function () {
 		this.load();
-		window.setInterval(this.update , 100);
+		const timer = window.setInterval(this.update , 100);
+		this.$on('hook:destroyed', () => window.clearInterval(timer));
 	},
 };
 
-new Vue({
+const systemDark = window.matchMedia('(prefers-color-scheme: dark)');
+
+let app = new Vue({
 	vuetify: new Vuetify({
-		theme: { dark: true },
+		theme: { dark: systemDark.matches },
 	}),
 	render: h => h(App)
 }).$mount('#app');
+
+systemDark.addEventListener('change', (e) => {
+	app.$vuetify.theme.dark = e.matches
+});
 
 function addTime(date, addms) {
 	let curr = date.getTime();
