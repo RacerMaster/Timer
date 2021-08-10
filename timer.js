@@ -156,10 +156,14 @@ const App = {
 					
 					if (mon) {
 						alarmtime.setMonth(mon - 1);
+					} else if (alarmtime - new Date() < 0) {
+						alarmtime.setMonth(alarmtime.getMonth() + 1);
 					}
 					
 					if (year) {
 						alarmtime.setFullYear(year);
+					} else if (alarmtime - new Date() < 0) {
+						alarmtime.setFullYear(alarmtime.getFullYear() + 1);
 					}
 				}
 				
