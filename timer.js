@@ -35,6 +35,7 @@ const App = {
 				if (alarm.rings > 0){
 					if (this.soundAlarm()){
 						alarm.rings--;
+						this.save();
 					}
 				}
 			}
