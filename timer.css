@@ -1,5 +1,6 @@
 input {
 	text-align: center;
+	max-height: 100% !important;
 }
 
 html {
@@ -71,4 +72,8 @@ html {
 
 .c_comment {
 	position: absolute;
+}
+
+.v-text-field {
+	padding-top: 0px;
 }
