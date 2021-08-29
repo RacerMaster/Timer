@@ -113,8 +113,8 @@ const App = {
 			
 			if (input == "ring") {
 				this.soundAlarm();
-			} else if (input == "reset cookie") {
-				this.resetCookie();
+			} else if (input == "reset") {
+				this.resetStorage();
 			} else if (v) {
 				v = v[1];
 				if (v < 0) {
@@ -237,27 +237,28 @@ const App = {
 			}
 		},
 		load: function (){
-			console.log("reading cookie");
-			let cookie = {};
+			console.log("reading data from storage");
+			let data = {};
 			try {
-				cookie = JSON.parse(document.cookie);
-			} catch (error) {}
+				data = JSON.parse(window.localStorage.getItem("data"));
+			} catch (error) {
+				console.error("error reading data");
+			}
 			
-			if (cookie.vol == undefined){
-				cookie.vol = 10;
+			if (data.vol == undefined){
+				data.vol = 10;
 			}
-			if (cookie.alarms == undefined){
-				cookie.alarms = [];
+			if (data.alarms == undefined){
+				data.alarms = [];
 			}
-			this.data = cookie;
+			this.data = data;
 		},
 		save: function (){
-			console.log("writing cookie");
-			let expDate = new Date();
-			expDate.setFullYear(expDate.getFullYear() + 100);
-			document.cookie = JSON.stringify(this.data) + ";expires=" + expDate.toUTCString() + ";SameSite=Strict";
+			console.log("writing data to storage");
+			let data = JSON.stringify(this.data);
+			window.localStorage.setItem("data", data);
 		},
-		resetCookie: function (){
+		resetStorage: function (){
 			this.data = {
 				vol: 10,
 				alarms: []
