@@ -1,104 +1,79 @@
-body {
-	background: DarkSlateGrey;
-	color: lightgray;
+input {
+	text-align: center;
+	max-height: 100% !important;
+}
+
+html {
+	overflow: hidden;
+}
+
+.v-application {
 	font-family: 'Lato', sans-serif;
 }
 
-.content {
+.c_content {
 	width: 95%;
 	margin: auto;
 	max-width: 900px;
 }
 
-.title {
+.c_title {
 	text-align: center;
 	font-size: 60pt;
-	margin-top: 30px;
+	margin-top: -10px;
 }
 
-.box {
+.c_right {
+	text-align: right;
+}
+
+.c_help {
+	width: 600px;
+}
+
+.c_box {
 	font-size: 25pt;
 }
 
-.input {
-	background: DarkSlateGrey;
+.c_alarmtext {
 	width: 100%;
 	text-align: center;
-	color: lightgray;
-	border: solid lightgray 4px;
-	border-radius: 4px;
-}
-
-#template {
-	display: none;
-}
-
-.alarm {
-	border-top: solid lightgray 4px;
-	text-align: center;
+	line-height: normal;
 	font-size: 45pt;
 }
 
-#alarms div:nth-child(2) {
-	border-top-width: 0px;
+.c_alarm {
+	width: 100%;
+	margin-left: 12px;
+	margin-right: 12px;
 }
 
-.display {
-	display: inline;
+.c_divider {
+	border-top: solid 2px;
 }
 
-.delete {
-	color: darkred;
-	display: inline;
-	font-size: 30px;
+.c_first {
+	margin-top: -10px;
 }
 
-.delete:hover {
-	cursor: pointer;
+.c_delete {
+	display: inline !important;
+	margin-left: -10px;
+	margin-bottom: -5px;
 }
 
-.comment {
-	font-size: 15pt;
+.v-icon:focus::after {
+	opacity: 0 !important;
+}
+
+.v-icon {
+	color: inherit !important;
+}
+
+.c_comment {
 	position: absolute;
 }
 
-.volume {
-	font-size: 15pt;
-	line-height: 1;
-	position: absolute;
-}
-
-#helpbutton {
-	font-size: 20pt;
-	float: right;
-	height: 0;
-}
-
-#helpbutton:hover {
-	cursor: pointer;
-}
-
-.modal-content {
-	background: darkslategray;
-	border-color: lightgray;
-	border-width: 4px; 
-}
-
-.modal-header {
-	border-width: 4px; 
-}
-
-.close {
-	color: white;
-	text-shadow: none;
-	opacity: 1;
-}
-
-.close:hover {
-	color: lightgray;
-}
-
-.modal-title {
-	line-height: 1;
-	font-size: 23pt;
+.v-text-field {
+	padding-top: 0px;
 }
