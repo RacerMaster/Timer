@@ -9,22 +9,6 @@ const App = {
 			alarms: [],
 		}
 	}),
-	computed: {
-		title: function(){
-			this.staticTitle; // use staticTitle so update causes recompute
-			for (let alarm of this.data.alarms){
-				let timerString = this.getTimerString(alarm);
-
-				if (timerString != "0") {
-					if (alarm.comment != ""){
-						return timerString + " : " + alarm.comment;
-					}
-					return timerString;
-				}
-			}
-			return this.staticTitle;
-		},
-	},
 	methods: {
 		getTimerString: function(alarm) {
 			let alarmDate = new Date(alarm.time);
@@ -226,12 +210,10 @@ const App = {
 		},
 		update: function(){
 			if (this.data.alarms.length > 0){
-				this.staticTitle = "not Alarm"; // update staticTitle so title gets recomputed
-				this.staticTitle = "Alarm";
 				if (document.visibilityState == "visible"){
 					this.$forceUpdate();
 				}
-				document.title = this.title;
+				document.title = this.getTitle();
 			} else {
 				document.title = this.staticTitle;
 			}
@@ -265,6 +247,19 @@ const App = {
 			};
 			this.save();
 		},
+		getTitle: function(){
+			for (let alarm of this.data.alarms){
+				let timerString = this.getTimerString(alarm);
+
+				if (timerString != "0") {
+					if (alarm.comment != ""){
+						return timerString + " : " + alarm.comment;
+					}
+					return timerString;
+				}
+			}
+			return this.staticTitle;
+		}
 	},
 	mounted: function () {
 		this.load();
