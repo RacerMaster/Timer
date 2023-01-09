@@ -7,31 +7,36 @@ const App = {
 		data: {
 			vol: 10,
 			alarms: [],
-		}
+		},
+		rings: 3
 	}),
 	methods: {
-		getTimerString: function(alarm) {
+		getTimerString: function (alarm) {
 			let alarmDate = new Date(alarm.time);
 			let ctdMs = alarmDate - new Date();
 
-			if (ctdMs <= 0){
+			if (ctdMs <= 0) {
 				ctdMs = 0;
-				if (alarm.rings > 0){
-					if (this.soundAlarm()){
+				if (alarm.rings > 0) {
+					if (alarm.rings == this.rings) {
+						this.alarmNotification(alarm);
+					}
+
+					if (this.soundAlarm()) {
 						alarm.rings--;
 						this.save();
 					}
 				}
 			}
-			
+
 			let h = Math.floor(ctdMs / 3600000);
 			ctdMs = ctdMs % 3600000;
-			
+
 			let m = Math.floor(ctdMs / 60000);
 			ctdMs = ctdMs % 60000;
-			
+
 			let s = Math.floor(ctdMs / 1000);
-			
+
 			let timeStr = "";
 			let cut = true;
 			if (h != 0) {
@@ -51,50 +56,50 @@ const App = {
 				timeStr += "0";
 			}
 			timeStr += s;
-			
+
 			return timeStr;
 		},
-		getAlarmString: function(time){
+		getAlarmString: function (time) {
 			let alarmString = "";
 			let ringTime = new Date(time);
 
-			if (ringTime.toLocaleDateString() != (new Date()).toLocaleDateString()){
-				alarmString = ringTime.toLocaleDateString()+ " " +ringTime.toLocaleTimeString();
+			if (ringTime.toLocaleDateString() != (new Date()).toLocaleDateString()) {
+				alarmString = ringTime.toLocaleDateString() + " " + ringTime.toLocaleTimeString();
 			} else {
 				alarmString = ringTime.toLocaleTimeString();
 			}
 
 			return alarmString;
 		},
-		createTimer: function(){
+		createTimer: function () {
 			let input = this.input;
 			let alarmtime = new Date();
 			let validinput = false;
-			
+
 			let hrcdt = /(\d+)\s*(?:hrs|hr|h|std)/i;
 			let mincdt = /(\d+)\s*(?:min|m|mins)/i;
 			let seccdt = /(\d+)\s*(?:s|sec|sek)/i;
-			
-			let date =  /@\s*(\d\d?)(?:\.(\d\d?)(?:\.(\d\d\d\d+))?)?/i;
-			
+
+			let date = /@\s*(\d\d?)(?:\.(\d\d?)(?:\.(\d\d\d\d+))?)?/i;
+
 			let alarm = /\d?\d:\d\d(?::\d\d)?/i;
-			
+
 			let volume = /(?:volume|vol):?\s*(\d+)/i;
-			
+
 			let comment = /\#(.*)/i;
-			
+
 			let h = input.match(hrcdt);
 			let m = input.match(mincdt);
 			let s = input.match(seccdt);
-			
+
 			let d = input.match(date);
-			
+
 			let t = input.match(alarm);
-			
+
 			let v = input.match(volume);
-			
+
 			let c = input.match(comment);
-			
+
 			if (input == "ring") {
 				this.soundAlarm();
 			} else if (input == "reset") {
@@ -127,31 +132,31 @@ const App = {
 				}
 			} else if (t) {
 				validinput = true;
-				
+
 				if (d) {
 					console.log(d);
-					
+
 					let day = d[1];
 					let mon = d[2];
 					let year = d[3];
-					
+
 					if (day) {
 						alarmtime.setDate(day);
 					}
-					
+
 					if (mon) {
 						alarmtime.setMonth(mon - 1);
 					} else if (alarmtime - new Date() < 0) {
 						alarmtime.setMonth(alarmtime.getMonth() + 1);
 					}
-					
+
 					if (year) {
 						alarmtime.setFullYear(year);
 					} else if (alarmtime - new Date() < 0) {
 						alarmtime.setFullYear(alarmtime.getFullYear() + 1);
 					}
 				}
-				
+
 				t = t[0].split(":");
 				if (t[0] >= 0 && t[0] <= 24) {
 					alarmtime.setHours(t[0]);
@@ -172,20 +177,20 @@ const App = {
 				} else {
 					alarmtime.setSeconds(0, 0);
 				}
-				
+
 				if (new Date() - alarmtime > 0) {
 					alarmtime.setDate(alarmtime.getDate() + 1);
 				}
 			}
-			
+
 			this.input = "";
 			if (validinput) {
 				console.log(alarmtime);
-				this.addTimer(alarmtime.toISOString(), c?c[1]:"");
+				this.addTimer(alarmtime.toISOString(), c ? c[1] : "");
 			}
 		},
-		addTimer: function(time, comment){
-			let alarm = {time: time, comment: comment, rings: 3};
+		addTimer: function (time, comment) {
+			let alarm = { time: time, comment: comment, rings: this.rings };
 			this.data.alarms.push(alarm);
 
 			this.data.alarms.sort((a, b) => {
@@ -195,11 +200,11 @@ const App = {
 			});
 			this.save();
 		},
-		removeTimer:  function(index){
+		removeTimer: function (index) {
 			this.data.alarms.splice(index, 1);
 			this.save();
 		},
-		soundAlarm: function(){
+		soundAlarm: function () {
 			let audio = this.$refs.ring;
 			audio.volume = this.data.vol / 100;
 			if (audio.paused) {
@@ -208,9 +213,9 @@ const App = {
 			}
 			return false;
 		},
-		update: function(){
-			if (this.data.alarms.length > 0){
-				if (document.visibilityState == "visible"){
+		update: function () {
+			if (this.data.alarms.length > 0) {
+				if (document.visibilityState == "visible") {
 					this.$forceUpdate();
 				}
 				document.title = this.getTitle();
@@ -218,7 +223,7 @@ const App = {
 				document.title = this.staticTitle;
 			}
 		},
-		load: function (){
+		load: function () {
 			console.log("reading data from storage");
 			let data = {};
 			try {
@@ -226,45 +231,73 @@ const App = {
 			} catch (error) {
 				console.error("error reading data");
 			}
-			
-			if (data.vol == undefined){
+
+			if (data.vol == undefined) {
 				data.vol = 10;
 			}
-			if (data.alarms == undefined){
+			if (data.alarms == undefined) {
 				data.alarms = [];
 			}
 			this.data = data;
 		},
-		save: function (){
+		save: function () {
 			console.log("writing data to storage");
 			let data = JSON.stringify(this.data);
 			window.localStorage.setItem("data", data);
 		},
-		resetStorage: function (){
+		resetStorage: function () {
 			this.data = {
 				vol: 10,
 				alarms: []
 			};
 			this.save();
 		},
-		getTitle: function(){
-			for (let alarm of this.data.alarms){
+		getTitle: function () {
+			for (let alarm of this.data.alarms) {
 				let timerString = this.getTimerString(alarm);
 
 				if (timerString != "0") {
-					if (alarm.comment != ""){
+					if (alarm.comment != "") {
 						return timerString + " : " + alarm.comment;
 					}
 					return timerString;
 				}
 			}
 			return this.staticTitle;
+		},
+		getNotificationPerm: function () {
+			if (Notification.permission != "granted") {
+				Notification.requestPermission();
+			}
+		},
+		sendNotification: function (title, options) {
+			if (Notification.permission == "granted") {
+				new Notification(title, options);
+			}
+		},
+		alarmNotification: function (alarm) {
+			let title = this.getAlarmString(alarm.time);
+
+			let body = "";
+			if (alarm.comment) {
+				body = alarm.comment;
+			}
+
+			let options = {
+				body: body,
+				requireInteraction: true,
+				icon: "favicon/favicon.svg"
+			}
+
+			this.sendNotification(title, options);
 		}
 	},
 	mounted: function () {
 		this.load();
-		const timer = window.setInterval(this.update , 100);
+		const timer = window.setInterval(this.update, 100);
 		this.$on('hook:destroyed', () => window.clearInterval(timer));
+
+		this.getNotificationPerm();
 	},
 };
 
