@@ -76,9 +76,9 @@ const App = {
 			let alarmtime = new Date();
 			let validinput = false;
 
-			let hrcdt = /(\d+)\s*(?:hrs|hr|h|std)/i;
+			let hrcdt = /(\d+)\s*(?:hrs|hr|h)/i;
 			let mincdt = /(\d+)\s*(?:min|m|mins)/i;
-			let seccdt = /(\d+)\s*(?:s|sec|sek)/i;
+			let seccdt = /(\d+)\s*(?:s|sec)/i;
 
 			let date = /@\s*(\d\d?)(?:\.(\d\d?)(?:\.(\d\d\d\d+))?)?/i;
 
