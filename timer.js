@@ -290,6 +290,19 @@ const App = {
 			}
 
 			this.sendNotification(title, options);
+		},
+		getParams: function () {
+			let getParams = new URLSearchParams(document.location.search);
+
+			let q = getParams.get("q");
+
+			if (q != null){
+				this.input = q;
+				this.createTimer();
+			}
+
+			let url = document.location.origin + document.location.pathname;
+			history.replaceState(null, "", url);
 		}
 	},
 	mounted: function () {
@@ -298,6 +311,7 @@ const App = {
 		this.$on('hook:destroyed', () => window.clearInterval(timer));
 
 		this.getNotificationPerm();
+		this.getParams();
 	},
 };
 
