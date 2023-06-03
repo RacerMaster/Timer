@@ -80,8 +80,8 @@
 							>
 								<v-col class="c_comment">
 									{{ getAlarmString(alarm.time) }}
-									<span v-if="alarm.comment">:</span> {{
-									alarm.comment }}
+									<span v-if="alarm.comment">:</span>
+									{{ alarm.comment }}
 								</v-col>
 								<v-col class="c_alarmtext">
 									{{ getTimerString(alarm) }}
@@ -90,8 +90,9 @@
 										color="red accent-4"
 										large
 										@click="removeTimer(i)"
-										>mdi-close</v-icon
 									>
+										mdi-close
+									</v-icon>
 								</v-col>
 							</div>
 						</v-row>
