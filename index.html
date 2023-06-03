@@ -1,94 +1,133 @@
 <!DOCTYPE html>
 <html>
+	<head>
+		<meta charset="utf-8" />
+		<meta content="IE=edge" http-equiv="X-UA-Compatible" />
+		<title>Alarm</title>
+		<meta content="width=device-width, initial-scale=1" name="viewport" />
+		<link href="favicon/favicon.svg?" rel="icon" type="image/svg+xml" />
+		<link href="favicon/favicon.png?" rel="icon" type="image/png" />
+		<link
+			href="https://fonts.googleapis.com/css?family=Lato"
+			rel="stylesheet"
+		/>
+		<link
+			href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900"
+			rel="stylesheet"
+		/>
+		<link
+			href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css"
+			rel="stylesheet"
+		/>
+		<link
+			href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css"
+			rel="stylesheet"
+		/>
+		<link
+			href="timer.css"
+			media="screen"
+			rel="stylesheet"
+			type="text/css"
+		/>
+		<meta
+			content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui"
+			name="viewport"
+		/>
+		<link
+			rel="search"
+			type="application/opensearchdescription+xml"
+			title="Alarm"
+			href="opensearchdescription.xml"
+		/>
+	</head>
 
-<head>
-  <meta charset="utf-8">
-  <meta content="IE=edge" http-equiv="X-UA-Compatible">
-  <title>Alarm</title>
-  <meta content="width=device-width, initial-scale=1" name="viewport">
-  <link href="favicon/favicon.svg?" rel="icon" type="image/svg+xml">
-  <link href="favicon/favicon.png?" rel="icon" type="image/png">
-  <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
-  <link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet">
-  <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
-  <link href="timer.css" media="screen" rel="stylesheet" type="text/css">
-  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui" name="viewport">
-  <link rel="search" type="application/opensearchdescription+xml" title="Alarm" href="opensearchdescription.xml" />
-</head>
-
-<body>
-  <div id="app"></div>
-  <script id="app-template" type="text/x-template">
-  <v-app>
-    <audio id="ring" ref="ring" src="ring.mp3"></audio>
-    <v-card class="c_content" elevation="5">
-      <v-card-text>
-        <v-row>
-          <v-col>
-            Volume: {{ data.vol }}
-          </v-col>
-          <v-col class="c_right">
-            <v-icon @click="help=true">mdi-help</v-icon>
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-col class="c_title">
-            Alarm
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-col>
-            <form v-on:submit.prevent="createTimer">
-              <v-text-field class="c_box" v-model="input" hide-details="true" loading="secondary" autofocus></v-text-field>
-            </form>
-          </v-col>
-        </v-row>
-        <v-row  v-for="(alarm, i) in data.alarms" :key="alarm.time">
-          <div class="c_alarm" v-bind:class="{ c_divider: i!=0, c_first: i==0 }">
-            <v-col class="c_comment">
-              {{ getAlarmString(alarm.time) }} <span v-if="alarm.comment">:</span> {{ alarm.comment }}
-            </v-col>
-            <v-col class="c_alarmtext">
-              {{ getTimerString(alarm) }}
-              <v-icon class="c_delete" color="red accent-4" large @click="removeTimer(i)">mdi-close</v-icon>
-            </v-col>
-          </div>
-        </v-row>
-      </v-card-text>
-    </v-card>
-    <v-dialog ref="help" max-width="600px" v-model="help">
-      <v-card flat>
-        <v-card-title>Usage</v-card-title>
-        <v-card-subtitle>Countdown:</v-card-subtitle>
-        <v-card-text>
-          hours: hrs/hr/h<br>
-          Minutes: min/m/mins<br>
-          Seconds: s/sec<br>
-          Example: 6m9s
-        </v-card-text>
-        <v-card-subtitle>Alarm:</v-card-subtitle>
-        <v-card-text>
-          [h]h:mm[:ss][@d[d].m[m].yyyy[y]]<br>
-          Example: 13:37
-        </v-card-text>
-        <v-card-subtitle>Comment:</v-card-subtitle>
-        <v-card-text>
-          # <br>
-          Example: 4h20m#blaze it!
-        </v-card-text>
-        <v-card-subtitle>Volume:</v-card-subtitle>
-        <v-card-text>
-          volume/vol[:] 0-100<br>
-          Example: vol 20
-        </v-card-text>
-      </v-card>
-    </v-dialog>
-  </v-app>
-  </script>
-  <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
-  <script src="timer.js"></script>
-</body>
-
+	<body>
+		<div id="app"></div>
+		<template id="app-template">
+			<v-app>
+				<audio id="ring" ref="ring" src="ring.mp3"></audio>
+				<v-card class="c_content" elevation="5">
+					<v-card-text>
+						<v-row>
+							<v-col> Volume: {{ data.vol }} </v-col>
+							<v-col class="c_right">
+								<v-icon @click="help=true">mdi-help</v-icon>
+							</v-col>
+						</v-row>
+						<v-row>
+							<v-col class="c_title"> Alarm </v-col>
+						</v-row>
+						<v-row>
+							<v-col>
+								<form v-on:submit.prevent="createTimer">
+									<v-text-field
+										class="c_box"
+										v-model="input"
+										hide-details="true"
+										loading="secondary"
+										autofocus
+									></v-text-field>
+								</form>
+							</v-col>
+						</v-row>
+						<v-row
+							v-for="(alarm, i) in data.alarms"
+							:key="alarm.time"
+						>
+							<div
+								class="c_alarm"
+								v-bind:class="{ c_divider: i!=0, c_first: i==0 }"
+							>
+								<v-col class="c_comment">
+									{{ getAlarmString(alarm.time) }}
+									<span v-if="alarm.comment">:</span> {{
+									alarm.comment }}
+								</v-col>
+								<v-col class="c_alarmtext">
+									{{ getTimerString(alarm) }}
+									<v-icon
+										class="c_delete"
+										color="red accent-4"
+										large
+										@click="removeTimer(i)"
+										>mdi-close</v-icon
+									>
+								</v-col>
+							</div>
+						</v-row>
+					</v-card-text>
+				</v-card>
+				<v-dialog ref="help" max-width="600px" v-model="help">
+					<v-card flat>
+						<v-card-title>Usage</v-card-title>
+						<v-card-subtitle>Countdown:</v-card-subtitle>
+						<v-card-text>
+							hours: hrs/hr/h<br />
+							Minutes: min/m/mins<br />
+							Seconds: s/sec<br />
+							Example: 6m9s
+						</v-card-text>
+						<v-card-subtitle>Alarm:</v-card-subtitle>
+						<v-card-text>
+							[h]h:mm[:ss][@d[d].m[m].yyyy[y]]<br />
+							Example: 13:37
+						</v-card-text>
+						<v-card-subtitle>Comment:</v-card-subtitle>
+						<v-card-text>
+							# <br />
+							Example: 4h20m#blaze it!
+						</v-card-text>
+						<v-card-subtitle>Volume:</v-card-subtitle>
+						<v-card-text>
+							volume/vol[:] 0-100<br />
+							Example: vol 20
+						</v-card-text>
+					</v-card>
+				</v-dialog>
+			</v-app>
+		</template>
+		<script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+		<script src="timer.js"></script>
+	</body>
 </html>
