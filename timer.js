@@ -1,12 +1,12 @@
 const App = {
-	template: '#app-template',
+	template: "#app-template",
 	data: () => ({
 		staticTitle: "Alarm",
 		input: "",
 		help: false,
 		data: {
 			vol: 10,
-			alarms: [],
+			alarms: []
 		},
 		rings: 3
 	}),
@@ -63,8 +63,13 @@ const App = {
 			let alarmString = "";
 			let ringTime = new Date(time);
 
-			if (ringTime.toLocaleDateString() != (new Date()).toLocaleDateString()) {
-				alarmString = ringTime.toLocaleDateString() + " " + ringTime.toLocaleTimeString();
+			if (
+				ringTime.toLocaleDateString() != new Date().toLocaleDateString()
+			) {
+				alarmString =
+					ringTime.toLocaleDateString() +
+					" " +
+					ringTime.toLocaleTimeString();
 			} else {
 				alarmString = ringTime.toLocaleTimeString();
 			}
@@ -287,7 +292,7 @@ const App = {
 				body: body,
 				requireInteraction: true,
 				icon: "favicon/favicon.svg"
-			}
+			};
 
 			this.sendNotification(title, options);
 		},
@@ -296,7 +301,7 @@ const App = {
 
 			let q = getParams.get("q");
 
-			if (q != null){
+			if (q != null) {
 				this.input = q;
 				this.createTimer();
 			}
@@ -308,24 +313,24 @@ const App = {
 	mounted: function () {
 		this.load();
 		const timer = window.setInterval(this.update, 100);
-		this.$on('hook:destroyed', () => window.clearInterval(timer));
+		this.$on("hook:destroyed", () => window.clearInterval(timer));
 
 		this.getNotificationPerm();
 		this.getParams();
-	},
+	}
 };
 
-const systemDark = window.matchMedia('(prefers-color-scheme: dark)');
+const systemDark = window.matchMedia("(prefers-color-scheme: dark)");
 
 let app = new Vue({
 	vuetify: new Vuetify({
-		theme: { dark: systemDark.matches },
+		theme: { dark: systemDark.matches }
 	}),
-	render: h => h(App)
-}).$mount('#app');
+	render: (h) => h(App)
+}).$mount("#app");
 
-systemDark.addEventListener('change', (e) => {
-	app.$vuetify.theme.dark = e.matches
+systemDark.addEventListener("change", (e) => {
+	app.$vuetify.theme.dark = e.matches;
 });
 
 function addTime(date, addms) {
