@@ -3,5 +3,5 @@
 	<ShortName>Alarm</ShortName>
 	<Description>Use this to set alarm from search bar</Description>
 	<InputEncoding>UTF-8</InputEncoding>
-	<Url type="text/html" template="https://racermaster.github.io/Timer/?q={searchTerms}" />
+	<Url type="text/html" template="https://racermaster.github.io/timer/?q={searchTerms}" />
 </OpenSearchDescription>
